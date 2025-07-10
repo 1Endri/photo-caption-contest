@@ -1,15 +1,18 @@
 ﻿const path = require('path');
 const fs = require('fs');
 
-module.exports = {
+const storagePath = path.join(__dirname, '../public/uploads');
+
+const storage = {
   local: {
-    storagePath: path.join(__dirname, '../public/uploads'),
-    getPublicUrl: (filename) => /uploads/originals/,
+    storagePath,
     
+    getPublicUrl: (filename) => `/uploads/originals/${filename}`, // <- fixed return
+
     init: () => {
       const dirs = ['originals', 'thumbnails'];
       dirs.forEach(dir => {
-        const dirPath = path.join(__dirname, ../public/uploads/);
+        const dirPath = path.join(storagePath, dir); // <- fixed path
         if (!fs.existsSync(dirPath)) {
           fs.mkdirSync(dirPath, { recursive: true });
         }
@@ -18,4 +21,7 @@ module.exports = {
   }
 };
 
-module.exports.local.init();
+storage.local.init();
+
+module.exports = storage;
+
