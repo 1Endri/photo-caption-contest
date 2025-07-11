@@ -10,7 +10,7 @@ const getSSLOptions = () => {
     const fullCaPath = path.resolve(__dirname, caPath);
     if (fs.existsSync(fullCaPath)) {
       return {
-        require: true,
+        rejectUnauthorized: true,
         ca: fs.readFileSync(fullCaPath)
       };
     }
@@ -24,10 +24,11 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
     dialectOptions: {
+      ssl: getSSLOptions(),
       decimalNumbers: true,
       supportBigNumbers: true,
       bigNumberStrings: false
@@ -51,13 +52,10 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: `${process.env.DB_NAME}_test`,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
     logging: false,
-    pool: {
-      max: 1
-    },
     define: {
       underscored: true,
       timestamps: true,
@@ -70,8 +68,8 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: `${process.env.DB_NAME}_prod`,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
     dialectOptions: {
       ssl: getSSLOptions(),

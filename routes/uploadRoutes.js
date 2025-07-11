@@ -12,13 +12,13 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 
     const { originalUrl, thumbnailUrl } = await imageProcessor.processUpload(req.file.buffer);
-    
+
     const photo = await Photo.create({
       title: req.body.title || 'Untitled',
       imageUrl: originalUrl,
       thumbnailUrl,
       caption: req.body.caption,
-      userId: req.user.id // Assuming you have authentication
+      userId: req.user ? req.user.id : null, // adjust for auth
     });
 
     res.status(201).json(photo);
